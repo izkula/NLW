@@ -2,7 +2,8 @@
 %%%% computer. Only modify this file on the NLW computer. 
 
 % clear all
-addpath(genpath('C:\Users\dlab\src\OEGAnalyze')); colordef white; 
+addpath(genpath('.')); 
+colordef white; 
 init_oeg_NLWcomputer;
 
 %%% globals are generated using computer dependent init file (i.e. initOEG or init_oeg_analysis1_NLW)
