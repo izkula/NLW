@@ -5,8 +5,9 @@
 addpath(genpath('~/src/OEGAnalyze'));
 % addpath(genpath('C:\Users\dlab\src\OEGAnalyze')); 
 colordef white; 
-init_oeg_analysis1_NLW;
+% init_oeg_analysis1_NLW;
 % init_oeg_NLWcomputer;
+init_oeg_SAMcomputer;
 
 
 %%% globals are generated using computer dependent init file (i.e. initOEG or init_oeg_analysis1_NLW)
@@ -152,13 +153,13 @@ if doMakeAverageVideo
 end
 
 %% Do ICA-based automated cell selection (requires user input)
-doICAselection = 0
+doICAselection = 1
 if doICAselection
     ICAselectionMultiTrialDatasets2p(data)
 end
 
 %% Now find cell masks (automatic)
-doICAsegmentation = 0
+doICAsegmentation = 1
 
 if doICAsegmentation
     doPlotting = 0;
@@ -168,7 +169,7 @@ end
 
 %% Now take those cell masks and use existing code to clean it up. (user input)
 
-doAdjustSegmentation = 0
+doAdjustSegmentation = 1
 
 if doAdjustSegmentation 
     defaultCellRadius = 3; % For manually selected neurons (as opposed to automated)
@@ -201,36 +202,36 @@ if doDeconvolveTraces
     DeconvolveTracesDatasets(data, 'numTrials', [], 'isNLW', isNLW, 'tDownsampleFactor', tDownsampleFactor);
 end
 
-%% Make some plots of the trace data
-doPlots = false;
-
-if doPlots
-AA = load('/home/izkula/Dropbox/NLW_results/2p/m594/ImageNLWTrainStimGoNoGo/May04_2017/Session1/traces_z0_.mat')
-BB = load('/home/izkula/Dropbox/NLW_results/2p/m594/ImageNLWTrainStimGoNoGo/May04_2017/Session1/deconvolved_z0_.mat')
-dfof = AA.dfoftraces;
-startFrames = ceil(AA.startFrames/tDownsampleFactor);
-figure(203);
-for a=1:size(dfof,1)
-%     plot(time,dfof(a,:)+(a-1)*5);
-    plot(dfof(a,:)+(a-1)*5);
-    hold on
-end
-PlotVerticalLines(startFrames)
-xlabel('Time (s');
-ylabel('dF/F');
-
-deconv = BB.dataset.img.deconv;
-startFrames = ceil(BB.dataset.startFrames/tDownsampleFactor);
-figure(203);
-for a=1:size(dfof,1)
-%     plot(time,dfof(a,:)+(a-1)*5);
-    plot(dfof(a,:)+(a-1)*5);
-    hold on
-end
-PlotVerticalLines(startFrames)
-xlabel('Time (s');
-ylabel('dF/F');
-end
+% % %% Make some plots of the trace data
+% % doPlots = false;
+% % 
+% % if doPlots
+% % AA = load('/home/izkula/Dropbox/NLW_results/2p/m594/ImageNLWTrainStimGoNoGo/May04_2017/Session1/traces_z0_.mat')
+% % BB = load('/home/izkula/Dropbox/NLW_results/2p/m594/ImageNLWTrainStimGoNoGo/May04_2017/Session1/deconvolved_z0_.mat')
+% % dfof = AA.dfoftraces;
+% % startFrames = ceil(AA.startFrames/tDownsampleFactor);
+% % figure(203);
+% % for a=1:size(dfof,1)
+% % %     plot(time,dfof(a,:)+(a-1)*5);
+% %     plot(dfof(a,:)+(a-1)*5);
+% %     hold on
+% % end
+% % PlotVerticalLines(startFrames)
+% % xlabel('Time (s');
+% % ylabel('dF/F');
+% % 
+% % deconv = BB.dataset.img.deconv;
+% % startFrames = ceil(BB.dataset.startFrames/tDownsampleFactor);
+% % figure(203);
+% % for a=1:size(dfof,1)
+% % %     plot(time,dfof(a,:)+(a-1)*5);
+% %     plot(dfof(a,:)+(a-1)*5);
+% %     hold on
+% % end
+% % PlotVerticalLines(startFrames)
+% % xlabel('Time (s');
+% % ylabel('dF/F');
+% % end
 
 
 %% Do ICA cell selection
