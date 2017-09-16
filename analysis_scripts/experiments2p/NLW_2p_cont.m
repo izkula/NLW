@@ -2,7 +2,7 @@
 
 % clear all
 
-addpath(genpath('~/src/OEGAnalyze'));
+addpath(genpath('~/git/NLW/'));
 % addpath(genpath('C:\Users\dlab\src\OEGAnalyze')); 
 colordef white; 
 % init_oeg_analysis1_NLW;
@@ -116,7 +116,12 @@ data = {
 %             {'rbpm13', 'ImageNLWTrainOlfGNG', 'Aug06_2017', 5, [0, 1, 2]}
 %             {'rbpm14', 'ImageNLWTrainOlfGNG', 'Aug06_2017', 2, [0]}
             
-              {'rbpm13', 'ImageNLWTrainOlfGNG', 'Jul18_2017', 1, [0, 1, 2]} %%% first day, first round --- z planes [0, 1, 2]
+%              {'rbpm13', 'ImageNLWTrainOlfGNG', 'Jul18_2017', 1, [0, 1, 2]} %%% first day, first round --- z planes [0, 1, 2]
+
+%%%%%%%%%%%%%%%   SAM 2p CLAUSTURUM DATA    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    {'m118', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '1', [0,1,2]} %test processing
+
+
 
 };
 
@@ -134,7 +139,7 @@ if doAppendTifs
 end
 
 %% Motion correct full image stack
-doMotionCorrect = 0;
+doMotionCorrect = 0
 
 t = cputime;
 if doMotionCorrect
@@ -146,11 +151,13 @@ end
 disp(['Total time for registration:' , num2str(cputime - t)])
 
 %% Generate trial averaged video (no incorporation of trial type)
-doMakeAverageVideo = 0;
+doMakeAverageVideo = 0
 
 if doMakeAverageVideo
     MakeAverageVidsDatasets2p(data)
 end
+
+%this is the end of NLW_2p_preprocess%
 
 %% Do ICA-based automated cell selection (requires user input)
 doICAselection = 1
