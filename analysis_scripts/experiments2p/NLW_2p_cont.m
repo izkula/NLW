@@ -119,7 +119,45 @@ data = {
 %              {'rbpm13', 'ImageNLWTrainOlfGNG', 'Jul18_2017', 1, [0, 1, 2]} %%% first day, first round --- z planes [0, 1, 2]
 
 %%%%%%%%%%%%%%%   SAM 2p CLAUSTURUM DATA    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    {'m118', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '1', [0,1,2]} %test processing
+    
+%m118 - bReaChes+
+{'m118', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '2', [0,1,2]} %social
+{'m118', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '3', [0,1,2]} %social2
+{'m118', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '4', [0,1,2]} %objects
+{'m118', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '5', [0,1,2]} %optostim
+
+%m119 - bReaCheS+
+{'m119', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '2', [0,1,2]} %object
+{'m119', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '4', [0,1,2]} %social
+{'m119', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '5', [0,1,2]} %optpstim
+
+%m120 - bReaCheS+
+{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '1', [0,1,2]} %social
+{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '2', [0,1,2]} %object
+{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '3', [0,1,2]} %stim
+{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '4', [0,1,2]} %social2
+{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '5', [0,1,2]} %object
+{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '6', [0,1,2]} %stim
+
+%m293
+{'m293', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '1', [0,1,2]} %social
+{'m293', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '2', [0,1,2]} %object
+{'m293', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '3', [0,1,2]} %stim
+
+%m295
+{'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '1', [0,1,2]} %social
+{'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '2', [0,1,2]} %social2
+{'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '3', [0,1,2]} %object1
+{'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '4', [0,1,2]} %stim
+
+%m407
+{'m407', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '1', [0,1,2]} %social
+{'m407', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '3', [0,1,2]} %object1
+{'m407', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '4', [0,1,2]} %stim
+
+
+
+
 
 
 
