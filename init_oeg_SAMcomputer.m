@@ -2,10 +2,10 @@
 
 global basePath bpodDataPath bpodImagePath imagejPath imagejMacroPath resultsPath
 % basePath = 'C:\2pdata\'
-basePath = '/home/sam/'
-bpodImagePath = '/home/sam/2pNLW/BpodData'
-bpodDataPath = 'C:\Users\dlab\Dropbox\Bpod\Data';
-imagejPath = 'C:\Users\dlab\Desktop\Fiji.app\ImageJ-win64.exe'
-resultsPath = '~\Dropbox\NLW_results'
+basePath = '/home/sam/2pNLW';
+bpodImagePath = [basePath '/BpodData/Data'];
+bpodDataPath = '~/Dropbox/Bpod/Data';
+imagejPath = '/opt/Fiji.app/ImageJ-linux64.exe';
+resultsPath = '~/Dropbox/NLW_results';
 % imagejMacroPath ='C:\Users\dlab\src\OEGAnalyze\matlab\WholeCortex\imagejMacros'
-imagejMacroPath = fullfile(pwd, 'imagejMacros')
+imagejMacroPath = fullfile(pwd, 'imagejMacros');
