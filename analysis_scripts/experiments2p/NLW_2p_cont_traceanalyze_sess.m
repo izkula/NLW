@@ -1,7 +1,7 @@
 %%%% Analyze 2p bpod behavior data, specifcially for volumetric session
 %%%% based data (ie not trial based)
 
-% clear all
+clearvars
 addpath(genpath('~/git/NLW')); colordef white; 
 init_oeg_SAMcomputer;
 
@@ -13,11 +13,11 @@ global basePath bpodDataPath bpodImagePath imagejMacroPath imagejPath resultsPat
 data = {
 
 %m120 - bReaCheS+
-{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '1', [0,1,2]} %social
-{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '2', [0,1,2]} %object
-{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '3', [0,1,2]} %stim
-{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '4', [0,1,2]} %social2
-{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '5', [0,1,2]} %object
+%{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '1', [0,1,2]} %social
+%{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '2', [0,1,2]} %object
+%{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '3', [0,1,2]} %stim
+%{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '4', [0,1,2]} %social2
+%{'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '5', [0,1,2]} %object
 {'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '6', [0,1,2]} %stim
 
 
@@ -25,90 +25,68 @@ data = {
 
 
 isNLW = true; %%% Data from Neurolabware microscope
-doProvideLoadPath = true
+doProvideLoadPath = true;
 
 
 
 %% Load deconvolved traces for analysis
-
-for i = 1:numel(data)
-
-close all
 shared_results_path = '~/Dropbox/NLW_results/2p/'
 
-currData = data{i};
-mouseName = currData{1}; protocolName = currData{2};  currDate = currData{3}; session = currData{4};  
 
+for i = 1:numel(data)
+    for j = 1:numel(data{i}{5}) %for each plane
 
+        close all
+        
+        currData = data{i}; %define current data
+        
+        %name some variables
+        mouseName = currData{1}; 
+        protocolName = currData{2};  
+        currDate = currData{3}; 
+        session = currData{4};
+        zplane = currData{5}(j); 
+
+    
+%dir to save out traces    
 saveDir =  MakeBpodImagePath2p(shared_results_path, mouseName, ...
-                                             protocolName, currDate, session)
+                               protocolName, currDate, session)
+%define variable for zstring
+zstr = ['z' num2str(zplane)] 
 
-if numel(currData)>4
-    zplane = currData{5};
-else
-    zplane = [];
+dataType = 'deconv'
+
+%load data for this session and one plane
+
+switch dataType
+    case 'traces'
+        load(fullfile(saveDir, ['traces_', zstr, '_.mat']))
+        d = reshape(permute(traces,[2,1,3]),size(traces,1),[]); %%% the data
+
+        YL = [0,.5] %[0,1]
+        outdir = fullfile(saveDir, ['traces_' zstr])
+    case 'deconv'
+        load(fullfile(saveDir, ['deconvolved_', zstr, '_.mat']), 'dataset')
+
+        d = dataset.img.appendedData.appendedTraces;
+        YL = [0,.5]
+        outdir = fullfile(saveDir,['deconv_' zstr])
 end
 
-for j = 1:numel(zplane)
-if ~isempty(zplane)
-    zstr = ['_z', num2str(zplane(j)), '_'];
-else
-    zstr = '';
-end
-
-
-
-load(fullfile(saveDir, ['deconvolved', zstr, '.mat']), 'dataset')
-
-
-%% For double checking that the trials match up with the raw video as it should. 
-%%% Instructions: Find the folder corresponding to the session in
-%%% Dropbox/NLW_results/2p/mouse_name/ .
-%%% Pick a cell who's number you can clearly see in the cellPositions
-%%% image.
-%%% Find the raw (processed) video in
-%%% processedData/BpodImageData/mouse_name/...../z0/reg/registered_noDenoise
-doDoubleCheckTraces = false
-
-if doDoubleCheckTraces
-    cellNumber = 43
-    figure, imagesc(squeeze(dataset.img.dfoftraces(cellNumber, :, :))')
     
-    trial = 8
-    index = 421
-    sf = round(dataset.img.startFrames/3);
-    disp(sf(trial) + index); %%%% This is the index to look at in the movie. 
-    
-    whichTestCell = 6
-    figure, subplot(121), imagesc(squeeze(dataset.img.dfoftraces(dataset.goodTraces(whichTestCell),:,:))'), 
-    subplot(122), imagesc(squeeze(dataset.img.spikes(whichTestCell,:,:))')
-end
-
-%% Plot average response to reward    
-doSpikes = false
-if doSpikes
-    d = dataset.img.spikes;
-    YL = [0,.2]
-    outdir = fullfile(saveDir, 'spikes')
-else
-    d = dataset.img.deconv; %%% the datacube
-    YL = [0,.5] %[0,1]
-    outdir = fullfile(saveDir, ['deconv_' num2str(j)])
-end
 mkdir(outdir)
 t = dataset.img.frameTimes; 
 %% Plot individual traces across the whole session
 % 
-% sess_across_cells = squeeze(mean(d, 1))';
-% figure, imagesc(t, 1:dataset.Ntrials, sess_across_cells, YL)
-% xlabel('time [s]')
-% ylabel('trial #')
-% xlim([0, max(t(:))])
-% set(gcf,'color','w');
-% colorbar()
-% PlotVerticalLines(reward_times, 1, dataset.Ntrials, 'k-')
-% title('Mean across cells')
-% print('-dpdf', fullfile(outdir, 'mean_across_cells.pdf'))
+figure, imagesc(t, 1:dataset.Ntrials, sess_across_cells, YL)
+xlabel('time [s]')
+ylabel('trial #')
+xlim([0, max(t(:))])
+set(gcf,'color','w');
+colorbar()
+PlotVerticalLines(reward_times, 1, dataset.Ntrials, 'k-')
+title('Mean across cells')
+print('-dpdf', fullfile(outdir, 'mean_across_cells.pdf'))
 
 
 
@@ -222,3 +200,4 @@ end
 
 end
 end
+

@@ -1,6 +1,6 @@
 %%%% Analyze 2p bpod behavior data for *continuously* recorded session (all trials are together in one movie).
 
-% clear all
+clear all
 
 addpath(genpath('~/git/NLW/'));
 % addpath(genpath('C:\Users\dlab\src\OEGAnalyze')); 
@@ -127,9 +127,9 @@ data = {
 {'m118', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '5', [0,1,2]} %optostim
 
 %m119 - bReaCheS+
-{'m119', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '2', [0,1,2]} %object
-{'m119', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '4', [0,1,2]} %social
-{'m119', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '5', [0,1,2]} %optpstim
+%{'m119',  'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '1', [0,1,2]} 
+%{'m119', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '3 ', [0]} 
+%{'m119', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '4', [0,1,2]} %social
 
 %m120 - bReaCheS+
 {'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '1', [0,1,2]} %social
@@ -140,27 +140,20 @@ data = {
 {'m120', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '6', [0,1,2]} %stim
 
 %m293
-{'m293', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '1', [0,1,2]} %social
-{'m293', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '2', [0,1,2]} %object
-{'m293', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '3', [0,1,2]} %stim
-
-%m295
-{'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '1', [0,1,2]} %social
-{'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '2', [0,1,2]} %social2
-{'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '3', [0,1,2]} %object1
-{'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '4', [0,1,2]} %stim
-
-%m407
-{'m407', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '1', [0,1,2]} %social
-{'m407', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '3', [0,1,2]} %object1
-{'m407', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '4', [0,1,2]} %stim
-
-
-
-
-
-
-
+ {'m293', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '1', [0,1,2]} %social
+ {'m293', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '2', [0,1,2]} %object
+ {'m293', 'ImageNLWTrainStimGoNoGo', 'Sep06_2017', '3', [0,1,2]} %stim
+% 
+% %m295
+ {'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '1', [0,1,2]} %social
+ {'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '2', [0,1,2]} %social2
+ {'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '3', [0,1,2]} %object1
+ {'m295', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '4', [0,1,2]} %stim
+% 
+% %m407
+ {'m407', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '1', [0,1,2]} %social
+ {'m407', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '3', [0,1,2]} %object1
+ {'m407', 'ImageNLWTrainStimGoNoGo', 'Sep07_2017', '4', [0,1,2]} %stim
 };
 
 
@@ -168,7 +161,7 @@ isNLW = true; %%% Data from Neurolabware microscope
 isContinuousTrial = true;
 %%% TO DO TO DO TO DO: Incorporate tDownsampleFactor into registration (so it is
 %%% flexible for when doing multiple planes)
-tDownsampleFactor = 3; 
+tDownsampleFactor = 1; 
 
 %% Merge trials into a single folder if necessary. Do this even if recorded continuously - it puts the data in the right location. 
 doAppendTifs = 0
@@ -214,7 +207,7 @@ end
 
 %% Now take those cell masks and use existing code to clean it up. (user input)
 
-doAdjustSegmentation = 1
+doAdjustSegmentation = 0
 
 if doAdjustSegmentation 
     defaultCellRadius = 3; % For manually selected neurons (as opposed to automated)
@@ -233,7 +226,6 @@ if doSaveTraces
 end
 
 %%% Load bpod data and summarize traces (takes a while) (use deconvolve traces instead of this)
-
 doSummarizeTraces = 0;
 
 if doSummarizeTraces
@@ -246,6 +238,9 @@ doDeconvolveTraces =1;
 if doDeconvolveTraces
     DeconvolveTracesDatasets(data, 'numTrials', [], 'isNLW', isNLW, 'tDownsampleFactor', tDownsampleFactor);
 end
+
+fprintf('Done with processing, check your Dropbox dir')
+
 
 % % %% Make some plots of the trace data
 % % doPlots = false;
