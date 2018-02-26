@@ -109,7 +109,7 @@ if doDoubleCheckTraces
     subplot(122), imagesc(squeeze(dataset.img.spikes(whichTestCell,:,:))')
 end
 
-%% Plot average response to reward    
+%% Plot average response to reward   (i.e. stim) 
 doSpikes = false
 if doSpikes
     d = dataset.img.spikes;
