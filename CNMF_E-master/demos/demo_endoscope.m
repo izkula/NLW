@@ -1,20 +1,18 @@
-
-
 %% clear workspace
-clc; close all;  
+clear; clc; close all;  
 global  d1 d2 numFrame ssub tsub sframe num2read Fs neuron neuron_ds ...
     neuron_full Ybg_weights; %#ok<NUSED> % global variables, don't change them manually
 
 %% select data and map it to the RAM
-nam = '~/2pdata/Results/m874/z.tif';
+nam = './data_1p.tif';
 cnmfe_choose_data;
 
 %% create Source2D class object for storing results and parameters
-Fs = 3;             % frame rate
-ssub = 3;           % spatial downsampling factor
+Fs = 10;             % frame rate
+ssub = 1;           % spatial downsampling factor
 tsub = 1;           % temporal downsampling factor
 gSig = 3;           % width of the gaussian kernel, which can approximates the average neuron shape
-gSiz = 30;          % maximum diameter of neurons in the image plane. larger values are preferred.
+gSiz = 13;          % maximum diameter of neurons in the image plane. larger values are preferred.
 neuron_full = Sources2D('d1',d1,'d2',d2, ... % dimensions of datasets
     'ssub', ssub, 'tsub', tsub, ...  % downsampleing
     'gSig', gSig,...    % sigma of the 2D gaussian that approximates cell bodies
@@ -62,13 +60,13 @@ cnmfe_show_corr_pnr;    % this step is not necessary, but it can give you some..
 % parameters
 debug_on = true;   % visualize the initialization procedue. 
 save_avi = false;   %save the initialization procedure as an avi movie. 
-patch_par = [1,1]*3; %1;  % divide the optical field into m X n patches and do initialization patch by patch. It can be used when the data is too large 
+patch_par = [1,1]*1; %1;  % divide the optical field into m X n patches and do initialization patch by patch. It can be used when the data is too large 
 K = []; % maximum number of neurons to search within each patch. you can use [] to search the number automatically
 
-min_corr = 0.65;     % minimum local correlation for a seeding pixel
-min_pnr = 5;       % minimum peak-to-noise ratio for a seeding pixel
+min_corr = 0.8;     % minimum local correlation for a seeding pixel
+min_pnr = 8;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = gSig^2;      % minimum number of nonzero pixels for each neuron
-bd = 0;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
+bd = 1;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 neuron.updateParams('min_corr', min_corr, 'min_pnr', min_pnr, ...
     'min_pixel', min_pixel, 'bd', bd);
 neuron.options.nk = 5;  % number of knots for detrending 
@@ -91,7 +89,7 @@ neuron_init = neuron.copy();
 %% iteratively update A, C and B
 % parameters, merge neurons
 display_merge = false;          % visually check the merged neurons
-view_neurons = true;           % view all neurons
+view_neurons = false;           % view all neurons
 
 % parameters, estimate the background
 spatial_ds_factor = 1;      % spatial downsampling factor. it's for faster estimation
@@ -101,7 +99,7 @@ bg_neuron_ratio = 1.5;  % spatial range / diameter of neurons
 
 % parameters, estimate the spatial components
 update_spatial_method = 'hals';  % the method for updating spatial components {'hals', 'hals_thresh', 'nnls', 'lars'}
-Nspatial = 2;       % this variable has different meanings: 
+Nspatial = 5;       % this variable has different meanings: 
                     %1) udpate_spatial_method=='hals' or 'hals_thresh',
                     %then Nspatial is the maximum iteration 
                     %2) update_spatial_method== 'nnls', it is the maximum
@@ -114,7 +112,7 @@ maxIter = 2;        % maximum number of iterations
 miter = 1; 
 while miter <= maxIter
     %% merge neurons
-    %cnmfe_quick_merge;              % run neuron merges
+    cnmfe_quick_merge;              % run neuron merges
     cnmfe_merge_neighbors;          % merge neurons if two neurons' peak pixels are too close 
     
     %% udpate background 
@@ -129,7 +127,7 @@ while miter <= maxIter
     for m=1:2  
         %temporal
         neuron.updateTemporal_endoscope(Ysignal);
-       % cnmfe_quick_merge;              % run neuron merges
+        cnmfe_quick_merge;              % run neuron merges
         %spatial
         neuron.updateSpatial_endoscope(Ysignal, Nspatial, update_spatial_method);
         
@@ -230,5 +228,3 @@ cnmfe_save_video;
 %% save results
 results = neuron.obj2struct(); 
 eval(sprintf('save %s%s%s_results.mat results', dir_nm, filesep, file_nm));
-
-

@@ -27,12 +27,18 @@ doGRINImages = 0
 
 if doGRINImages
     %downsample data spatially, crop, and register within a session
-    grin2pReduceImageSize(basePath)
-
-    
+    grin_2p_CropReduceRegisterMoco(basePath)
 end
 
-%% Extract Traces for each Session
+%% Register and Aggregate all the sessions together
+doAggregateSessions = 0 %manual right now due to dumbness
+
+if doAggregateSessions
+    %downsample data spatially, crop, and register within a session
+    grin_2p_AggregateSessions(basePath)
+end
+
+%%
 
 f = dir(fullfile(basePath,'*','*'));
 
