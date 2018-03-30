@@ -1,21 +1,27 @@
-function [] = large_data_2p_grin(subject)
+%%function [] = large_data_2p_grin(image_stack, outpath)
 %% clear the workspace and select data 
-clear; clc; close all; 
+ clc; close all; 
 
 %% choose data 
-neuron = Sources2D(); 
-nam = ['~/2pdata/Results/' subject '/z_cat_red.tif'];          % this demo data is very small, here we just use it as an example
+neuron = Sources2D(); %
+%nam = ['~/2pdata/Results/' subject '/z_cat_red.tif'];          % this demo data is very small, here we just use it as an example
+nam = '~/2pdata/20180219/m876_8arm_concatenated/AVG_z0_processed.tif';
+outpath = '~/2pdata/20180219/m876_8arm_concatenated/neuron.mat'
+%nam = image_stack
 nam = neuron.select_data(nam);  %if nam is [], then select data interactively 
 
 %% parameters  
+% ------------------ SAM VESUNA PARAMETERS -------- %
+downSampleRate = 5; %This is the number used for grouped Z projection
+
+
 % -------------------------    COMPUTATION    -------------------------  %
 pars_envs = struct('memory_size_to_use', 80, ...   % GB, memory space you allow to use in MATLAB 
     'memory_size_per_patch', 80, ...   % GB, space for loading data within one patch 
     'patch_dims', [40, 40]);  %GB, patch size 
-   
 % -------------------------      SPATIAL      -------------------------  %
 gSig = 1;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-gSiz = 8;          % pixel, neuron diameter 
+gSiz = 11;          % pixel, neuron diameter 
 ssub = 1;           % spatial downsampling factor
 with_dendrites = false;   % with dendrites or not 
 if with_dendrites
@@ -32,7 +38,7 @@ end
 spatial_constraints = struct('connected', true, 'circular', false);  % you can include following constraints: 'circular'
 
 % -------------------------      TEMPORAL     -------------------------  %
-Fs = 5;             % frame rate
+Fs = 31/downSampleRate;             % frame rate
 tsub = 1;           % temporal downsampling factor
 deconv_options = struct('type', 'ar1', ... % model of the calcium traces. {'ar1', 'ar2'}
     'method', 'foopsi', ... % method for running deconvolution {'foopsi', 'constrained', 'thresholded'}
@@ -58,7 +64,7 @@ dmin_only = 5;  % merge neurons if their distances are smaller than dmin_only.
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible 
-min_corr = 0.65;     % minimum local correlation for a seeding pixel
+min_corr = 0.7;     % minimum local correlation for a seeding pixel
 min_pnr = 3;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = 2^2;      % minimum number of nonzero pixels for each neuron
 bd = 15;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
@@ -152,8 +158,25 @@ fprintf('Extracting and saving')
 A = neuron.A;
 C = neuron.C;
 C_raw = neuron.C_raw;
-save(fullfile('~/2pdata/Results/',subject,'neuron.mat'))
 
+clearvars -except A C C_raw Cn deconv_options FS tsub ssub subject downSampleRate outpath
+
+%% upsample the traces
+
+x = 1:downSampleRate:length(C)*downSampleRate;
+xv = 1:1:length(C)*downSampleRate;
+upsampledTraces = false;
+
+if ~upsampledTraces 
+C = interp1(x,C',xv)';
+C_raw = interp1(x,C_raw',xv)';
+upsampledTraces = true;
+end
+
+save(outpath)
+
+
+    
 
 % neuron.update_background_parallel(use_parallel); 
 % neuron.update_temporal_parallel(use_parallel); 
@@ -176,10 +199,10 @@ neuron.save_workspace();
 %% show neuron contours  
 Coor = neuron.show_contours(); 
 
-end
+
 
 %% save neurons shapes 
-%neuron.save_neurons(); 
+neuron.save_neurons(); 
 
 
 

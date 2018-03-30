@@ -1,8 +1,7 @@
 %%% Define global variables (for data from Neurolabware 2p)
 
-global basePath bpodDataPath bpodImagePath imagejPath imagejMacroPath resultsPath trial_data frameTicks timeTicks frameSampleRate
+global basePath bpodDataPath bpodImagePath imagejPath imagejMacroPath resultsPath trial_data
 basePath = '~/2pdata/'
-
 %bpodImagePath = 'C:\2pdata\BpodData'
 %bpodDataPath = 'C:\Users\dlab\Dropbox\Bpod\Data';
 imagejPath = '~\Fiji.app\ImageJ-linux64.exe'
@@ -21,9 +20,9 @@ trial_data = {...
 %for 8 arm
 frameSampleRate = 31;
 nFramesBaseline = 5*frameSampleRate;
-nFramesAdvance = 309;
+nFramesAdvance = 310;
 nFramesStationary = 310;
-nFramesRetreat = 309;
+nFramesRetreat = 310;
 nFramesPostTrial = 5*frameSampleRate;
 
 

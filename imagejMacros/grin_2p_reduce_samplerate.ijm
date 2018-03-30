@@ -14,26 +14,12 @@ print(out_path)
 
 //here we go!
 
-
 //Load the image stack
 run("Image Sequence...", "open="+image_path+ " sort");
-run("8-bit");
 
-
-
-//Crop
-makeRectangle(96, 5, 796, 505);
-run("Crop");
-
-//Reduce Images Size
-run("Size...", "width=300 height=250 depth=20499 frames constrain average interpolation=Bilinear");
-
-//Generate Template Image
-run("Z Project...", "stop=700 projection=[Average Intensity]");
-
-
-//Run MOCO
-run("moco ", "value=43 downsample_value=1 template=AVG_z0 stack=z0 log=None plot=[No plot]");
+//Reduce SampleRate
+Stack.getDimensions(width, height, channels, slices, frames); 
+run("Grouped Z Project...", "projection=[Average Intensity] group=6");
 
 //Save
 saveAs("Tiff", out_path);

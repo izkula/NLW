@@ -1,0 +1,11 @@
+%%LOADS THE NIDAQ OUTPUT AND EXTRACTS THE RUNNING SIGNAL, DOWNSAMPLES TO 31
+%%HZ AND MOVES IT TO THE RESULTS DIRECTORY
+
+init_samz
+
+f = dir(fullfile(basePath,'*','*'))
+
+for i = 1:numel(f)
+    if 
+    end
+end
