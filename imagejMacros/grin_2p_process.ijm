@@ -10,6 +10,7 @@ args = split(getArgument(), ",");
 
 image_path = args[0]
 out_path = args[1]
+number_images = args[2]
 print(out_path)
 
 //here we go!
@@ -19,21 +20,23 @@ print(out_path)
 run("Image Sequence...", "open="+image_path+ " sort");
 run("8-bit");
 
-
+//Rename
+rename("z")
 
 //Crop
 makeRectangle(96, 5, 796, 505);
 run("Crop");
 
 //Reduce Images Size
-run("Size...", "width=300 height=250 depth=20499 frames constrain average interpolation=Bilinear");
+run("Size...", "width=300 height=250 depth=19999 frames constrain average interpolation=Bilinear");
 
 //Generate Template Image
 run("Z Project...", "stop=700 projection=[Average Intensity]");
+rename("AVG")
 
 
 //Run MOCO
-run("moco ", "value=43 downsample_value=1 template=AVG_z0 stack=z0 log=None plot=[No plot]");
+run("moco ", "value=43 downsample_value=1 template=AVG stack=z log=None plot=[No plot]");
 
 //Save
 saveAs("Tiff", out_path);

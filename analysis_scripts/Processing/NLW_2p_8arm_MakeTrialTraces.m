@@ -2,7 +2,7 @@
 %%neuron, saves out a trialtrace.mat file%%%
 clear all; close all; clc
 init_samz
-f = dir('~/2presults/8arm/')
+f = dir(fullfile(resultsPath, '8arm'))
 
 trialOrder = {1 2 1 4 2 1 2 3};
 
