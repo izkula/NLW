@@ -1,12 +1,12 @@
 %%This analysis script makes the trial averaged data for every claustrum
 %%neuron, saves out a trialtrace.mat file%%%
 clear all; close all; clc
-init_samz
-f = dir('~/2presults/8arm/')
+init_samMac
+f = dir(fullfile(resultsPath, '8arm'))
 
 trialOrder = {1 2 1 4 2 1 2 3};
 
-for i = 3:numel(f)
+for i = 9:numel(f)
     dirName = fullfile(f(i).folder,f(i).name);
     
     %load neuron trace data
@@ -16,12 +16,21 @@ for i = 3:numel(f)
     load(fullfile(dirName, 'metadata.mat'))
 
     %Hard Code some things for the 8arm experiment
+    subject = dirName(end-8:end-5);
     nNeurons = size(C,1);
     nFramesBeforeTrial = nFramesBaseline;
     nFramesAfterTrial =nFramesPostTrial;
     nFramesPerTrial = nFramesAdvance + nFramesStationary + nFramesRetreat + nFramesBeforeTrial + nFramesAfterTrial;
-    nTrials = 10;
     nArms = 8;
+    
+    %one mouse had fewer trials.
+    if contains(dirName(end-8:end-5),'m874')
+        nTrials = 8
+    else
+        nTrials = 10
+    end
+    
+        
     
     %extract traces 
     %note, from frame start to frame end, 
@@ -71,7 +80,7 @@ for i = 3:numel(f)
     
     save(fullfile(f(i).folder, f(i).name, 'trialtraces.mat'), ...
         'traces', 'traces_preliminary', 'trialOrder', 'nNeurons', 'nFramesPerTrial',...
-        'nTrials', 'nArms', 'A')
+        'nTrials', 'nArms', 'A', 'subject')
 end
     
 
