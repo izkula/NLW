@@ -4,15 +4,16 @@
 
 %% choose data 
 neuron = Sources2D(); %
-%nam = ['~/2pdata/Results/' subject '/z_cat_red.tif'];          % this demo data is very small, here we just use it as an example
-nam = '~/2pdata/20180219/m876_8arm_concatenated/AVG_z0_processed.tif';
-outpath = '~/2pdata/20180219/m876_8arm_concatenated/neuron.mat'
+%nam = ['~/2pdata/Results/' subject '/z_cat_red.tif'];  
+filename = 'm876_kxanesthetized_002'        % this demo data is very small, here we just use it as an example
+nam = fullfile('~/2pdata', filename, 'z0_processed.tif')
+outpath = fullfile('~/2pdata', filename, 'z0_neuron.mat')
 %nam = image_stack
 nam = neuron.select_data(nam);  %if nam is [], then select data interactively 
 
 %% parameters  
 % ------------------ SAM VESUNA PARAMETERS -------- %
-downSampleRate = 5; %This is the number used for grouped Z projection
+downSampleRate = 1; %This is the number used for grouped Z projection
 
 
 % -------------------------    COMPUTATION    -------------------------  %
@@ -64,8 +65,8 @@ dmin_only = 5;  % merge neurons if their distances are smaller than dmin_only.
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible 
-min_corr = 0.7;     % minimum local correlation for a seeding pixel
-min_pnr = 3;       % minimum peak-to-noise ratio for a seeding pixel
+min_corr = 0.5;     % minimum local correlation for a seeding pixel
+min_pnr = 10;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = 2^2;      % minimum number of nonzero pixels for each neuron
 bd = 15;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames 
@@ -153,13 +154,18 @@ neuron.orderROIs('snr');   % order neurons in different ways {'snr', 'decay_time
 if with_manual_intervention
     neuron.viewNeurons([], neuron.C_raw);
 end
-%%
-fprintf('Extracting and saving')
-A = neuron.A;
-C = neuron.C;
-C_raw = neuron.C_raw;
 
-clearvars -except A C C_raw Cn deconv_options FS tsub ssub subject downSampleRate outpath
+%% show neuron contours  
+Coor = neuron.show_contours(); 
+
+%extract
+fprintf('Extracting and saving')
+A = neuron.A; %footprint
+C = neuron.C; %calcium
+C_raw = neuron.C_raw; %raw calcium
+S = neuron.S; %spikes
+
+clearvars -except A C C_raw Cn S deconv_options FS tsub ssub subject downSampleRate outpath 
 
 %% upsample the traces
 
@@ -170,6 +176,7 @@ upsampledTraces = false;
 if ~upsampledTraces 
 C = interp1(x,C',xv)';
 C_raw = interp1(x,C_raw',xv)';
+S = interp1(x,S',xv)';
 upsampledTraces = true;
 end
 
@@ -194,15 +201,13 @@ save(outpath)
 % end
 
 %% save the workspace for future analysis 
-neuron.save_workspace(); 
+%neuron.save_workspace(); 
 
-%% show neuron contours  
-Coor = neuron.show_contours(); 
 
 
 
 %% save neurons shapes 
-neuron.save_neurons(); 
+%neuron.save_neurons(); 
 
 
 

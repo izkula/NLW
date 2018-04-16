@@ -1,7 +1,11 @@
 %%This analysis script makes the trial averaged data for every claustrum
 %%neuron, saves out a trialtrace.mat file%%%
 clear all; close all; clc
+<<<<<<< HEAD
 init_samMac
+=======
+init_samz
+>>>>>>> 62d3b715031feecedf9b50a5314750ccd0dfa1c9
 f = dir(fullfile(resultsPath, '8arm'))
 
 trialOrder = {1 2 1 4 2 1 2 3};

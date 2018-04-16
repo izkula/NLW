@@ -6,7 +6,7 @@ basePath = '~/2pdata/'
 %bpodImagePath = 'C:\2pdata\BpodData'
 %bpodDataPath = 'C:\Users\dlab\Dropbox\Bpod\Data';
 imagejPath = '~\Fiji.app\ImageJ-linux64.exe'
-resultsPath = '~/2pdata/Results'
+resultsPath = '~/Dropbox/2p_Claustrum_Shared/Results/'
 imagejMacroPath = fullfile(pwd, 'imagejMacros')
 
 

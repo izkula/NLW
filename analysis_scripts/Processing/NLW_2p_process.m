@@ -20,7 +20,7 @@ if doExtractTifs
     %remove SBX files
     RemoveSBXFiles(fullfile(basePath))   
 end
-
+%%
 % Crop, DownSample and Register Images
 
 doGRINImages = 1
@@ -32,13 +32,14 @@ end
 
 %% Then run CNMFE
 
-%% Organize meta data
-grin_2p_OrganizeMetaData;
+%% Organize meta data and extract movement data
 
-%% extract movement data
-%to complete, because some of the 8arms don't have this make this of
-%secondary importance
-%grin_2p_ExtractMovement;
+grin_2p_8arm_OrganizeMetaData;
+
+grin_2p_running_OrganizeMetaData;
+
+%then move contours, neuron, processed and traces to results folder
+
 
 
 %% put it all together in a data struct
