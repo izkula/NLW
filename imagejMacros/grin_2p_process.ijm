@@ -24,11 +24,11 @@ run("8-bit");
 rename("z")
 
 //Crop
-makeRectangle(96, 5, 796, 505);
+makeRectangle(98, 20, 580, 500);
 run("Crop");
 
 //Reduce Images Size
-run("Size...", "width=300 height=250 depth=19999 frames constrain average interpolation=Bilinear");
+//run("Size...", "width=300 height=250 depth=5666 frames constrain average interpolation=Bilinear");
 
 //Generate Template Image
 run("Z Project...", "stop=700 projection=[Average Intensity]");

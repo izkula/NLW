@@ -1,28 +1,28 @@
 %%function [] = large_data_2p_grin(image_stack, outpath)
 %% clear the workspace and select data 
- clc; close all; 
+ clc; close all;  clear
 
 %% choose data 
 neuron = Sources2D(); %
 %nam = ['~/2pdata/Results/' subject '/z_cat_red.tif'];  
-filename = 'm876_kxanesthetized_002'        % this demo data is very small, here we just use it as an example
-nam = fullfile('~/2pdata', filename, 'z0_processed.tif')
-outpath = fullfile('~/2pdata', filename, 'z0_neuron.mat')
+filename = '20180417/m845_stim_001/';        % this demo data is very small, here we just use it as an example
+nam = fullfile('~/2pdata', filename, 'AVG_z2_processed.tif')
+outpath = fullfile('~/2pdata', filename, 'AVG_z2_neuron.mat')
 %nam = image_stack
 nam = neuron.select_data(nam);  %if nam is [], then select data interactively 
 
 %% parameters  
-% ------------------ SAM VESUNA PARAMETERS -------- %
-downSampleRate = 1; %This is the number used for grouped Z projection
+% ------------------ SAM VESUNA PARAMETERS -n------- %
+downSampleRate = 6; %This is the number used for grouped Z projection
 
 
 % -------------------------    COMPUTATION    -------------------------  %
 pars_envs = struct('memory_size_to_use', 80, ...   % GB, memory space you allow to use in MATLAB 
     'memory_size_per_patch', 80, ...   % GB, space for loading data within one patch 
-    'patch_dims', [40, 40]);  %GB, patch size 
+    'patch_dims', [80, 60]);  %GB, patch size 
 % -------------------------      SPATIAL      -------------------------  %
 gSig = 1;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-gSiz = 11;          % pixel, neuron diameter 
+gSiz = 4;          % pixel, neuron diameter 
 ssub = 1;           % spatial downsampling factor
 with_dendrites = false;   % with dendrites or not 
 if with_dendrites
@@ -65,10 +65,10 @@ dmin_only = 5;  % merge neurons if their distances are smaller than dmin_only.
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible 
-min_corr = 0.5;     % minimum local correlation for a seeding pixel
+min_corr = 0.90;     % minimum local correlation for a seeding pixel
 min_pnr = 10;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = 2^2;      % minimum number of nonzero pixels for each neuron
-bd = 15;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
+bd = 5;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames 
 save_initialization = false;    % save the initialization procedure as a video. 
 use_parallel = true;    % use parallel computation for parallel computing 
@@ -160,10 +160,10 @@ Coor = neuron.show_contours();
 
 %extract
 fprintf('Extracting and saving')
-A = neuron.A; %footprint
-C = neuron.C; %calcium
+A = neuron.A; %spatial footprint
+C = neuron.C; %calcium trace
 C_raw = neuron.C_raw; %raw calcium
-S = neuron.S; %spikes
+S = neuron.S; %spiking
 
 clearvars -except A C C_raw Cn S deconv_options FS tsub ssub subject downSampleRate outpath 
 

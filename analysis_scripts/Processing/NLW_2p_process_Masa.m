@@ -5,7 +5,7 @@
  cd('~/src/NLW/')
 addpath(genpath('.')); 
 colordef white; 
-init_samz;
+init_samz_Masa;
 
 %%% globals are generated using computer dependent init file (i.e. initOEG or init_oeg_analysis1_NLW)
 global basePath  imagejMacroPath imagejPath resultsPath
