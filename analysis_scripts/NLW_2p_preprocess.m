@@ -1,5 +1,5 @@
 %%%% Preprocess data on samz computer before transferring to data
-%%%% computer. Only modify this file on the NLW computer. 
+%%%% computer. 
 
  clear all
  cd('~/src/NLW/')

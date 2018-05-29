@@ -27,11 +27,11 @@ print(slices)
 run("Size...", "width=300 height=250 depth=slices frames constrain average interpolation=Bilinear");
 
 //Generate Template Image
-run("Z Project...", "stop=300 projection=[Standard Deviation]");
+run("Z Project...", "stop=300 projection=[Average Intensity]");
 run("16-bit");
 
 //Run MOCO
-run("moco ", "value=20 downsample_value=1 template=STD_z0 stack=z0 log=None plot=[No plot]");
+run("moco ", "value=60 downsample_value=1 template=AVG_z0 stack=z0 log=None plot=[No plot]");
 
 //Save
 saveAs("Tiff", out_path);

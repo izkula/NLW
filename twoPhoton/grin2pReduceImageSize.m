@@ -1,6 +1,7 @@
 function [] = grin2pReduceImageSize(basePath)
 %
-f = dir(fullfile(basePath,'*','*'));
+% f = dir(fullfile(basePath,'*','*'));
+f = dir(fullfile(basePath));
 
 
 for i = 1:numel(f)

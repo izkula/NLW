@@ -1,26 +1,21 @@
-function [] = demo_large_data_2p(image_stack_path)
-
-%takes in large registered data
 %% clear the workspace and select data 
-clc; close all; 
-
-
+clear; clc; close all; 
 
 %% choose data 
 neuron = Sources2D(); 
-nam = image_stack_path;          % this demo data is very small, here we just use it as an example
+nam = './data_2p.tif';          % this demo data is very small, here we just use it as an example
 nam = neuron.select_data(nam);  %if nam is [], then select data interactively 
 
 %% parameters  
 % -------------------------    COMPUTATION    -------------------------  %
-pars_envs = struct('memory_size_to_use', 80, ...   % GB, memory space you allow to use in MATLAB 
-    'memory_size_per_patch', 80, ...   % GB, space for loading data within one patch 
-    'patch_dims', [100, 100]);  %GB, patch size 
+pars_envs = struct('memory_size_to_use', 8, ...   % GB, memory space you allow to use in MATLAB 
+    'memory_size_per_patch', 0.3, ...   % GB, space for loading data within one patch 
+    'patch_dims', [30, 40]);  %GB, patch size 
    
 % -------------------------      SPATIAL      -------------------------  %
 gSig = 0.5;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
 gSiz = 10;          % pixel, neuron diameter 
-ssub = 2;           % spatial downsampling factor
+ssub = 1;           % spatial downsampling factor
 with_dendrites = false;   % with dendrites or not 
 if with_dendrites
     % determine the search locations by dilating the current neuron shapes
@@ -36,7 +31,7 @@ end
 spatial_constraints = struct('connected', true, 'circular', false);  % you can include following constraints: 'circular'
 
 % -------------------------      TEMPORAL     -------------------------  %
-Fs = 10;             % frame rate
+Fs = 5;             % frame rate
 tsub = 1;           % temporal downsampling factor
 deconv_options = struct('type', 'ar1', ... % model of the calcium traces. {'ar1', 'ar2'}
     'method', 'foopsi', ... % method for running deconvolution {'foopsi', 'constrained', 'thresholded'}
@@ -55,21 +50,21 @@ ring_radius = 13;  % when the ring model used, it is the radius of the ring used
 
 % -------------------------      MERGING      -------------------------  %
 show_merge = false;  % if true, manually verify the merging step 
-merge_thr = 0.5;     % thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
+merge_thr = 0.7;     % thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
 method_dist = 'max';   % method for computing neuron distances {'mean', 'max'}
 dmin = 10;       % minimum distances between two neurons. it is used together with merge_thr
-dmin_only = 5;  % merge neurons if their distances are smaller than dmin_only. 
+dmin_only = 2;  % merge neurons if their distances are smaller than dmin_only. 
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible 
-min_corr = 0.60;     % minimum local correlation for a seeding pixel
-min_pnr = 3;       % minimum peak-to-noise ratio for a seeding pixel
-min_pixel = 16;      % minimum number of nonzero pixels for each neuron
+min_corr = 0.7;     % minimum local correlation for a seeding pixel
+min_pnr =10;       % minimum peak-to-noise ratio for a seeding pixel
+min_pixel = 2^2;      % minimum number of nonzero pixels for each neuron
 bd = 0;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames 
 save_initialization = false;    % save the initialization procedure as a video. 
 use_parallel = true;    % use parallel computation for parallel computing 
-show_init = false;   % show initialization results 
+show_init = true;   % show initialization results 
 choose_params = false; % manually choose parameters 
 center_psf = false;  % set the value as true when the background fluctuation is large (usually 1p data) 
                     % set the value as false when the background fluctuation is small (2p)
@@ -181,7 +176,8 @@ neuron.show_demixed_video(save_demixed, kt, [], amp_ac, range_ac, range_Y);
 %% save neurons shapes 
 neuron.save_neurons(); 
 
-end
+%% save neurons shapes 
+neuron.save_neurons(); 
 
 
 
