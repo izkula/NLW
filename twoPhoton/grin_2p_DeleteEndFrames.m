@@ -1,4 +1,4 @@
-function [] = grin_2p_CropReduceRegisterMoco(basePath, directoryName)
+function [] = grin_2p_DeleteEndFrames(basePath, directoryName)
 %
 f = dir(fullfile(basePath,'*','*'));
 
@@ -9,7 +9,6 @@ for i = 1:numel(f)
     
     for j = 1:3
     
-    %%%%%%%check that z0 tif existd%%%%%%
     if exist([f(i).folder '/' f(i).name '/' z{j}],'dir') && ~exist([f(i).folder '/' f(i).name '/' z{j} '_processed.tif'])
         
     f_images = dir([f(i).folder '/' f(i).name '/' z{j}])  

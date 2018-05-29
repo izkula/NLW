@@ -11,6 +11,7 @@ args = split(getArgument(), ",");
 image_path = args[0]
 out_path = args[1]
 number_images = args[2]
+print(number_images)
 print(out_path)
 
 //here we go!
@@ -28,15 +29,15 @@ makeRectangle(98, 20, 580, 500);
 run("Crop");
 
 //Reduce Images Size
-//run("Size...", "width=300 height=250 depth=5666 frames constrain average interpolation=Bilinear");
+run("Size...", "width=300 height=250 depth=21666 frames constrain average interpolation=Bilinear");
 
 //Generate Template Image
-run("Z Project...", "stop=700 projection=[Average Intensity]");
+run("Z Project...", "stop=300 projection=[Average Intensity]");
 rename("AVG")
 
 
 //Run MOCO
-run("moco ", "value=43 downsample_value=1 template=AVG stack=z log=None plot=[No plot]");
+run("moco ", "value=30 downsample_value=1 template=AVG stack=z log=None plot=[No plot]");
 
 //Save
 saveAs("Tiff", out_path);

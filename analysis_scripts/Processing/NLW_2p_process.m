@@ -20,21 +20,27 @@ if doExtractTifs
     %remove SBX files
     RemoveSBXFiles(fullfile(basePath))   
 end
-%%
+%
 % Crop, DownSample and Register Images
 
 doGRINImages = 1
 
 if doGRINImages
     %downsample data spatially, crop, and register within a session
-    grin_2p_CropReduceRegisterMoco(basePath)
+    grin_2p_CropReduceRegisterMoco(basePath,'20180522')
 end
+
+%% MAKE AVERAGE PROCESSED VIDEOS
+
 
 %% Then run CNMFE
 
 %% Organize meta data and extract movement data
 
-%grin_2p_8arm_OrganizeMetaData;
+processMetaData;
+
+
+grin_2p_8arm_OrganizeMetaData;
 
 %grin_2p_running_OrganizeMetaData;
 

@@ -43,6 +43,10 @@ sIdx = round(fTimes*30.98); sIdx(1,1) = 1 %Calculate the indices for each trial 
 t_m = cell(numel(t), size(sIdx,1))
 
 %%
+plotIndividualNeurons = 0
+
+if plotIndividualNeurons 
+
 tO = cat(3., t{1}, t{3}, t{6});
 tS = cat(3,t{2}, t{5}, t{7});
 tT = [t{8}];
@@ -75,11 +79,7 @@ for i = 1:size(tO,1)
 saveas(h,['~/Dropbox/2p_Claustrum_Shared/2p/Results/8arm/Figures/TrialType/Neuron' num2str(i)],'pdf')
     
 end
-
-
-
-
-
+end
 
 
 
@@ -93,9 +93,8 @@ post = [35 40]
 fTimes = [pre; approach; interaction; retreat; post];
 sIdx = round(fTimes*30.98); sIdx(1,1) = 1 %Calculate the indices for each trial epoch
 t_m = cell(numel(t), size(sIdx,1))
-for i = 1:numel(t)     
-    x = mean(t{i},3);
-    
+for i = 1:numel(t)         
+    x = t{i};
     for j = 1:size(sIdx,1)
     y = mean(x(:,sIdx(j,1):sIdx(j,2)),2);
     t_m{i,j} = y;
@@ -149,35 +148,5 @@ set(gca,'YScale','log')
 ylabel 'n Claustrum Neurons'
 xlabel 'Social Preferring .... Object Preferring'
 
-
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%%
-
-
-close all
-%intermediate plots
-pos = [1 2 3 4 5 6 10 11]
-for i = 1:5
-    figure
-    for j = [1 3 6 2 5 7 4 8]
-        subplot(4,3,pos(j))
-        histogram(t_m{j,i})
-        set(gca,'YScale', 'log')
-    end
 
 end

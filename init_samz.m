@@ -19,11 +19,11 @@ trial_data = {...
  };
 
 %for 8 arm
-frameSampleRate = 31;
-nFramesBaseline = 5*frameSampleRate;
-nFramesAdvance = 309;
-nFramesStationary = 310;
-nFramesRetreat = 309;
+frameSampleRate = 30.98;
+nFramesBaseline = round(5*frameSampleRate);
+nFramesAdvance = 9*frameSampleRate;
+nFramesStationary = 7*frameSampleRate;
+nFramesRetreat = 9*frameSampleRate;
 nFramesPostTrial = 5*frameSampleRate;
 
 
