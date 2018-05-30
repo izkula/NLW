@@ -4,15 +4,15 @@ global  d1 d2 numFrame ssub tsub sframe num2read Fs neuron neuron_ds ...
     neuron_full Ybg_weights; %#ok<NUSED> % global variables, don't change them manually
 
 %% select data and map it to the RAM
-nam = './data_1p.tif';
+nam = '~/Desktop/m400.tif';
 cnmfe_choose_data;
 
 %% create Source2D class object for storing results and parameters
-Fs = 10;             % frame rate
+Fs = 15;             % frame rate
 ssub = 1;           % spatial downsampling factor
 tsub = 1;           % temporal downsampling factor
-gSig = 3;           % width of the gaussian kernel, which can approximates the average neuron shape
-gSiz = 13;          % maximum diameter of neurons in the image plane. larger values are preferred.
+gSig = 2;           % width of the gaussian kernel, which can approximates the average neuron shape
+gSiz = 7;          % maximum diameter of neurons in the image plane. larger values are preferred.
 neuron_full = Sources2D('d1',d1,'d2',d2, ... % dimensions of datasets
     'ssub', ssub, 'tsub', tsub, ...  % downsampleing
     'gSig', gSig,...    % sigma of the 2D gaussian that approximates cell bodies
@@ -53,18 +53,18 @@ fprintf('Time cost in downsapling data:     %.2f seconds\n', toc);
 Y = neuron.reshape(Y, 1);       % convert a 3D video into a 2D matrix
 
 %% compute correlation image and peak-to-noise ratio image.
-cnmfe_show_corr_pnr;    % this step is not necessary, but it can give you some...
+%cnmfe_show_corr_pnr;    % this step is not necessary, but it can give you some...
                         % hints on parameter selection, e.g., min_corr & min_pnr
 
 %% initialization of A, C
 % parameters
 debug_on = true;   % visualize the initialization procedue. 
-save_avi = false;   %save the initialization procedure as an avi movie. 
+save_avi = true;   %save the initialization procedure as an avi movie. 
 patch_par = [1,1]*1; %1;  % divide the optical field into m X n patches and do initialization patch by patch. It can be used when the data is too large 
 K = []; % maximum number of neurons to search within each patch. you can use [] to search the number automatically
 
-min_corr = 0.8;     % minimum local correlation for a seeding pixel
-min_pnr = 8;       % minimum peak-to-noise ratio for a seeding pixel
+min_corr = 0.5;     % minimum local correlation for a seeding pixel
+min_pnr = 3;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = gSig^2;      % minimum number of nonzero pixels for each neuron
 bd = 1;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 neuron.updateParams('min_corr', min_corr, 'min_pnr', min_pnr, ...
@@ -89,7 +89,7 @@ neuron_init = neuron.copy();
 %% iteratively update A, C and B
 % parameters, merge neurons
 display_merge = false;          % visually check the merged neurons
-view_neurons = false;           % view all neurons
+view_neurons = true;           % view all neurons
 
 % parameters, estimate the background
 spatial_ds_factor = 1;      % spatial downsampling factor. it's for faster estimation

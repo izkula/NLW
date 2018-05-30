@@ -10,28 +10,33 @@ args = split(getArgument(), ",");
 
 image_path = args[0]
 out_path = args[1]
+number_images = args[2]
 print(out_path)
 
 //here we go!
 
+
 //Load the image stack
 run("Image Sequence...", "open="+image_path+ " sort");
+run("8-bit");
+
+//Rename
+rename("z")
 
 //Crop
-makeRectangle(96, 5, 796, 505);
+makeRectangle(98, 20, 580, 500);
 run("Crop");
 
 //Reduce Images Size
-Stack.getDimensions(width, height, channels, slices, frames); 
-print(slices)
-run("Size...", "width=300 height=250 depth=slices frames constrain average interpolation=Bilinear");
+//run("Size...", "width=300 height=250 depth=5666 frames constrain average interpolation=Bilinear");
 
 //Generate Template Image
-run("Z Project...", "stop=300 projection=[Average Intensity]");
-run("16-bit");
+run("Z Project...", "stop=700 projection=[Average Intensity]");
+rename("AVG")
+
 
 //Run MOCO
-run("moco ", "value=60 downsample_value=1 template=AVG_z0 stack=z0 log=None plot=[No plot]");
+run("moco ", "value=43 downsample_value=1 template=AVG stack=z log=None plot=[No plot]");
 
 //Save
 saveAs("Tiff", out_path);

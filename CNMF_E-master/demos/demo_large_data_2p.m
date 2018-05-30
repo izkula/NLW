@@ -1,20 +1,21 @@
+function [] = large_data_2p_grin(subject)
 %% clear the workspace and select data 
 clear; clc; close all; 
 
 %% choose data 
 neuron = Sources2D(); 
-nam = './data_2p.tif';          % this demo data is very small, here we just use it as an example
+nam = ['~/2pdata/Results/' subject '/z_cat_red.tif'];          % this demo data is very small, here we just use it as an example
 nam = neuron.select_data(nam);  %if nam is [], then select data interactively 
 
 %% parameters  
 % -------------------------    COMPUTATION    -------------------------  %
-pars_envs = struct('memory_size_to_use', 8, ...   % GB, memory space you allow to use in MATLAB 
-    'memory_size_per_patch', 0.3, ...   % GB, space for loading data within one patch 
-    'patch_dims', [30, 40]);  %GB, patch size 
+pars_envs = struct('memory_size_to_use', 80, ...   % GB, memory space you allow to use in MATLAB 
+    'memory_size_per_patch', 80, ...   % GB, space for loading data within one patch 
+    'patch_dims', [40, 40]);  %GB, patch size 
    
 % -------------------------      SPATIAL      -------------------------  %
-gSig = 0.5;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-gSiz = 10;          % pixel, neuron diameter 
+gSig = 1;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
+gSiz = 8;          % pixel, neuron diameter 
 ssub = 1;           % spatial downsampling factor
 with_dendrites = false;   % with dendrites or not 
 if with_dendrites
@@ -50,27 +51,27 @@ ring_radius = 13;  % when the ring model used, it is the radius of the ring used
 
 % -------------------------      MERGING      -------------------------  %
 show_merge = false;  % if true, manually verify the merging step 
-merge_thr = 0.7;     % thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
+merge_thr = 0.75;     % thresholds for merging neurons; [spatial overlap ratio, temporal correlation of calcium traces, spike correlation]
 method_dist = 'max';   % method for computing neuron distances {'mean', 'max'}
-dmin = 10;       % minimum distances between two neurons. it is used together with merge_thr
-dmin_only = 2;  % merge neurons if their distances are smaller than dmin_only. 
+dmin = 5;       % minimum distances between two neurons. it is used together with merge_thr
+dmin_only = 5;  % merge neurons if their distances are smaller than dmin_only. 
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible 
-min_corr = 0.7;     % minimum local correlation for a seeding pixel
-min_pnr =10;       % minimum peak-to-noise ratio for a seeding pixel
+min_corr = 0.65;     % minimum local correlation for a seeding pixel
+min_pnr = 3;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = 2^2;      % minimum number of nonzero pixels for each neuron
-bd = 0;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
+bd = 15;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames 
 save_initialization = false;    % save the initialization procedure as a video. 
 use_parallel = true;    % use parallel computation for parallel computing 
-show_init = true;   % show initialization results 
-choose_params = false; % manually choose parameters 
+show_init = false;   % show initialization results 
+choose_params = true; % manually choose parameters 
 center_psf = false;  % set the value as true when the background fluctuation is large (usually 1p data) 
                     % set the value as false when the background fluctuation is small (2p)
 
 % ----------------------   MANUAL INTERVENTION  --------------------  %
-with_manual_intervention = false; 
+with_manual_intervention = true; 
 
 % -------------------------  FINAL RESULTS   -------------------------  %
 save_demixed = true;    % save the demixed file or not 
@@ -146,20 +147,28 @@ neuron.orderROIs('snr');   % order neurons in different ways {'snr', 'decay_time
 if with_manual_intervention
     neuron.viewNeurons([], neuron.C_raw);
 end
-neuron.update_background_parallel(use_parallel); 
-neuron.update_temporal_parallel(use_parallel); 
-neuron.update_spatial_parallel(use_parallel); 
+%%
+fprintf('Extracting and saving')
+A = neuron.A;
+C = neuron.C;
+C_raw = neuron.C_raw;
+save(fullfile('~/2pdata/Results/',subject,'neuron.mat'))
 
-K = size(neuron.A,2); 
-tags = neuron.tag_neurons_parallel();  % find neurons with fewer nonzero pixels than min_pixel and silent calcium transients
-neuron.delete(tags>0);
-neuron.merge_neurons_dist_corr(show_merge);
-neuron.merge_close_neighbors(show_merge, dmin_only);
-if K~=size(neuron.A,2)
-    neuron.update_temporal_parallel(use_parallel);
-    neuron.update_spatial_parallel(use_parallel);
-    neuron.update_background_parallel(use_parallel);
-end
+
+% neuron.update_background_parallel(use_parallel); 
+% neuron.update_temporal_parallel(use_parallel); 
+% neuron.update_spatial_parallel(use_parallel); 
+
+% K = size(neuron.A,2); 
+% tags = neuron.tag_neurons_parallel();  % find neurons with fewer nonzero pixels than min_pixel and silent calcium transients
+% neuron.delete(tags>0);
+% neuron.merge_neurons_dist_corr(show_merge);
+% neuron.merge_close_neighbors(show_merge, dmin_only);
+% if K~=size(neuron.A,2)
+%     neuron.update_temporal_parallel(use_parallel);
+%     neuron.update_spatial_parallel(use_parallel);
+%     neuron.update_background_parallel(use_parallel);
+% end
 
 %% save the workspace for future analysis 
 neuron.save_workspace(); 
@@ -167,20 +176,10 @@ neuron.save_workspace();
 %% show neuron contours  
 Coor = neuron.show_contours(); 
 
-%% create a video for displaying the 
-amp_ac = 5000; 
-range_ac = [0, 5000]; 
-range_Y = [0, 10000]; 
-neuron.show_demixed_video(save_demixed, kt, [], amp_ac, range_ac, range_Y); 
+end
 
 %% save neurons shapes 
-neuron.save_neurons(); 
-
-%% save neurons shapes 
-neuron.save_neurons(); 
-
-
-
+%neuron.save_neurons(); 
 
 
 
