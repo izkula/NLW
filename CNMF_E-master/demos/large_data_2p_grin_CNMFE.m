@@ -5,7 +5,7 @@
 %% choose data 
 neuron = Sources2D(); %
 %nam = ['~/2pdata/Results/' subject '/z_cat_red.tif'];  
-filename = '20180417/m845_stim_001/';        % this demo data is very small, here we just use it as an example
+filename = '20180522/m874_8arm2_006/';        % this demo data is very small, here we just use it as an example
 nam = fullfile('~/2pdata', filename, 'AVG_z2_processed.tif')
 outpath = fullfile('~/2pdata', filename, 'AVG_z2_neuron.mat')
 %nam = image_stack
@@ -22,7 +22,7 @@ pars_envs = struct('memory_size_to_use', 80, ...   % GB, memory space you allow 
     'patch_dims', [80, 60]);  %GB, patch size 
 % -------------------------      SPATIAL      -------------------------  %
 gSig = 1;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-gSiz = 4;          % pixel, neuron diameter 
+gSiz = 6;          % pixel, neuron diameter 
 ssub = 1;           % spatial downsampling factor
 with_dendrites = false;   % with dendrites or not 
 if with_dendrites
@@ -31,6 +31,7 @@ if with_dendrites
     updateA_bSiz = 20;
     updateA_dist = neuron.options.dist; 
 else
+    
     % determine the search locations by selecting a round area
     updateA_search_method = 'ellipse'; %#ok<UNRCH>
     updateA_dist = 5;
@@ -39,7 +40,7 @@ end
 spatial_constraints = struct('connected', true, 'circular', false);  % you can include following constraints: 'circular'
 
 % -------------------------      TEMPORAL     -------------------------  %
-Fs = 31/downSampleRate;             % frame rate
+Fs = 30.98/downSampleRate;             % frame rate
 tsub = 1;           % temporal downsampling factor
 deconv_options = struct('type', 'ar1', ... % model of the calcium traces. {'ar1', 'ar2'}
     'method', 'foopsi', ... % method for running deconvolution {'foopsi', 'constrained', 'thresholded'}
@@ -65,16 +66,16 @@ dmin_only = 5;  % merge neurons if their distances are smaller than dmin_only.
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible 
-min_corr = 0.90;     % minimum local correlation for a seeding pixel
-min_pnr = 10;       % minimum peak-to-noise ratio for a seeding pixel
-min_pixel = 2^2;      % minimum number of nonzero pixels for each neuron
-bd = 5;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
+min_corr = 0.2;     % minimum local correlation for a seeding pixel
+min_pnr = 2;       % minimum peak-to-noise ratio for a seeding pixel
+min_pixel = 3^2;      % minimum number of nonzero pixels for each neuron
+bd = 3;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames 
 save_initialization = false;    % save the initialization procedure as a video. 
 use_parallel = true;    % use parallel computation for parallel computing 
-show_init = false;   % show initialization results 
+show_init = false   % show initialization results 
 choose_params = true; % manually choose parameters 
-center_psf = false;  % set the value as true when the background fluctuation is large (usually 1p data) 
+center_psf = true;  % set the value as true when the background fluctuation is large (usually 1p data) 
                     % set the value as false when the background fluctuation is small (2p)
 
 % ----------------------   MANUAL INTERVENTION  --------------------  %
@@ -156,7 +157,7 @@ if with_manual_intervention
 end
 
 %% show neuron contours  
-Coor = neuron.show_contours(); 
+%Coor = neuron.show_contours(); 
 
 %extract
 fprintf('Extracting and saving')

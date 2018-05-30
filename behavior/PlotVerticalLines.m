@@ -6,7 +6,7 @@ if nargin < 2
     maxY = YL(2);
 end
 if nargin < 4
-    cmap = 'k--';
+    cmap = 'r--';
 end
 hold on;
 for i= 1:numel(times)
