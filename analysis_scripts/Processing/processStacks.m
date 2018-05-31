@@ -65,4 +65,6 @@ for i = 1:numel(data)
 %    MakeAVI(stack, 10, fullfile(savePath, 'stack.avi', cmap, maxval)
     close all
     MakeAVI(stack, 10, fullfile(savePath, 'stack.avi'))
+
+    SaveTiffStack(stack, fullfile(savePath, 'stack'))
 end
