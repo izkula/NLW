@@ -18,8 +18,10 @@ for j=subSeq
         currImages(:, :, j) = imread(imName);            
     catch e
         disp(e)
-     end
-    j
+    end
+    if mod(j, 100) == 0
+        disp(j)
+    end
 end
 
 end
