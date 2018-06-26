@@ -3,8 +3,8 @@ init_samz
 %
 doRunning = 0;
 do8armStimCortex = 0 ;
-doGRIN = 0;
-do8armFP = 1;
+doGRIN = 1;
+do8armFP = 0;
 
 %%%%%%%%%%%%%%%%%%% RUNNING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if doRunning
@@ -185,9 +185,10 @@ meta.raw.run = d(5,:);
 meta.run = runCountsSmoothAligned;
 meta.runCounts = runCounts;
 meta.runCountsSmooth = runCountsSmooth;
-meta.runTickBin = tickBin
-meta.nidaqSampleRate = nidaqSampleRate
+meta.runTickBin = tickBin;
+meta.nidaqSampleRate = nidaqSampleRate;
 meta.frames = frames
+meta.framesAligned = frames - meta.frameStart
 catch
     fprintf(['Cant load nidaq file' name]);
 end
@@ -272,6 +273,8 @@ runCountsSmooth = smooth(runCounts, 50);
 
 %1D interpolation
 runCountsSmoothAligned = resample(runCountsSmooth, sessionFrames, length(runCountsSmooth));
+fprintf(['Session Frames ' sessionFrames'])
+fprintf(['Frame Diff ' num2str(meta.frameEnd - meta.frameStart)])
 
                 %% Stim %%
 meta.raw.optoStim = d(1,:);
@@ -283,7 +286,8 @@ meta.runCounts = runCounts;
 meta.runCountsSmooth = runCountsSmooth;
 meta.runTickBin = tickBin
 meta.nidaqSampleRate = nidaqSampleRate
-meta.frames = frames
+meta.frames = frames 
+meta.framesAligned =  meta.frames - meta.frameStart
 catch
     fprintf(['Cant load nidaq file' name]);
     frames = info.frame;
@@ -347,7 +351,7 @@ try
 [t,d] = LoadNidaqOutput(fullfile(folderpaths{ii}, 'nidaq.mat'),5);
 
 try
-sessionFrames = 64998;
+sessionFrames = [];
 %catch
 %    sessionFrames = nSlices;
 end
@@ -368,13 +372,13 @@ meta.frameEnd = meta.frameStart + round(length(d) / nidaqSampleRate * frameSampl
 
                     %% EXTRACT SPEED %% 
 figure; plot(d(5,:))
-runTicks = d(5,:) < -0.04;
-tickBin = nidaqSampleRate / 40; %for a bin of 100 ms
+runTicks = d(5,:) < -0.03;
+tickBin = nidaqSampleRate / 50; %for a bin of 100 ms
 runCounts = nansum(reshape(runTicks, tickBin, []));
-runCountsSmooth = smooth(runCounts, 50); 
+runCountsSmooth = smooth(runCounts, 200); 
 
 %1D interpolation
-runCountsSmoothAligned = resample(runCountsSmooth, sessionFrames, length(runCountsSmooth));
+runCountsSmoothAligned = resample(runCountsSmooth, meta.frameEnd - meta.frameStart, length(runCountsSmooth));
 
                 %% Stim %%
 meta.raw.optoStim = d(1,:);
@@ -385,8 +389,12 @@ meta.raw.optoStim = d(1,:);
 meta.raw.fpSignal = d(3,:);
 meta.raw.fpcontrol = d(4,:);
 
-meta.fp = d(3,:) - d(4,:);
+fp = d(3,:) - d(4,:);
+fp_down =  nanmean(reshape(fp, tickBin, []));
 
+%1D interpolation
+meta.fp = resample(fp_down, meta.frameEnd - meta.frameStart, length(fp_down));
+meta.fp = smooth(meta.fp,50)
                 
 
                 %% SAVE OUT TO A META STRUCT %%
@@ -397,6 +405,8 @@ meta.runCountsSmooth = runCountsSmooth;
 meta.runTickBin = tickBin
 meta.nidaqSampleRate = nidaqSampleRate
 meta.frames = frames
+meta.framesAligned = frames - meta.frameStart
+
 catch
     fprintf(['Cant load nidaq file' name]);
     %frames = info.frame;

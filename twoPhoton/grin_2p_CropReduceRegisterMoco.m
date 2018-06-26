@@ -1,6 +1,6 @@
 function [] = grin_2p_CropReduceRegisterMoco(basePath, directoryName)
 %
-f = dir(fullfile(basePath,'*','*'));
+f = dir(fullfile(basePath,'BpodData','*','*','*','*','*'));
 
 z = {'z0' 'z1' 'z2'};
 for i = 1:numel(f)

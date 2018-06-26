@@ -22,22 +22,29 @@ run("Image Sequence...", "open="+image_path+ " sort");
 run("8-bit");
 
 //Rename
-rename("z")
+//rename("z")
+
+getDimensions(width, height, channelCount, sliceCount, frameCount);
 
 //Crop
-makeRectangle(98, 20, 580, 500);
+makeRectangle(98, 20, 580, 480);
 run("Crop");
 
+
 //Reduce Images Size
-run("Size...", "width=300 height=250 depth=21666 frames constrain average interpolation=Bilinear");
+run("Size...", "width=200 height=166 depth=sliceCount constrain average interpolation=Bilinear");
+rename("z")
 
 //Generate Template Image
-run("Z Project...", "stop=300 projection=[Average Intensity]");
+run("Z Project...", "stop=250 projection=[Average Intensity]");
 rename("AVG")
-
 
 //Run MOCO
 run("moco ", "value=30 downsample_value=1 template=AVG stack=z log=None plot=[No plot]");
+
+
+//Grouped Z Project you must make sure it is an even number stack
+run("Grouped Z Project...", "projection=[Average Intensity] group=2");
 
 //Save
 saveAs("Tiff", out_path);

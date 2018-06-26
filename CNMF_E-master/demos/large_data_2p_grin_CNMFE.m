@@ -4,16 +4,14 @@
 
 %% choose data 
 neuron = Sources2D(); %
-%nam = ['~/2pdata/Results/' subject '/z_cat_red.tif'];  
-filename = '20180522/m874_8arm2_006/';        % this demo data is very small, here we just use it as an example
-nam = fullfile('~/2pdata', filename, 'AVG_z2_processed.tif')
-outpath = fullfile('~/2pdata', filename, 'AVG_z2_neuron.mat')
-%nam = image_stack
+filename = '/m831/ImageNLWShapeLick/Jun24_2018/Session1/m831_ImageNLWShapeLick_Jun24_2018_Session1/'        % this demo data is very small, here we just use it as an example
+nam = fullfile('/home/svesuna/2pdata/BpodData', filename, 'z0_processed.tif')
+outpath = fullfile('/home/svesuna/2pdata/BpodData/', filename, 'neuron.mat')
 nam = neuron.select_data(nam);  %if nam is [], then select data interactively 
 
 %% parameters  
-% ------------------ SAM VESUNA PARAMETERS -n------- %
-downSampleRate = 6; %This is the number used for grouped Z projection
+% ------------------ SAM VESUNA PARAMETERS -------- %
+downSampleRate = 2; %This is the number used for grouped Z projection
 
 
 % -------------------------    COMPUTATION    -------------------------  %
@@ -22,7 +20,7 @@ pars_envs = struct('memory_size_to_use', 80, ...   % GB, memory space you allow 
     'patch_dims', [80, 60]);  %GB, patch size 
 % -------------------------      SPATIAL      -------------------------  %
 gSig = 1;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
-gSiz = 6;          % pixel, neuron diameter 
+gSiz = 3;          % pixel, neuron diameter 
 ssub = 1;           % spatial downsampling factor
 with_dendrites = false;   % with dendrites or not 
 if with_dendrites
@@ -66,12 +64,12 @@ dmin_only = 5;  % merge neurons if their distances are smaller than dmin_only.
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible 
-min_corr = 0.2;     % minimum local correlation for a seeding pixel
-min_pnr = 2;       % minimum peak-to-noise ratio for a seeding pixel
-min_pixel = 3^2;      % minimum number of nonzero pixels for each neuron
+min_corr = 0.1;     % minimum local correlation for a seeding pixel
+min_pnr = 1;       % minimum peak-to-noise ratio for a seeding pixel
+min_pixel = 2^2;      % minimum number of nonzero pixels for each neuron
 bd = 3;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames 
-save_initialization = false;    % save the initialization procedure as a video. 
+save_initialization = false;    % save the initialization procedure, filename] as a video. 
 use_parallel = true;    % use parallel computation for parallel computing 
 show_init = false   % show initialization results 
 choose_params = true; % manually choose parameters 
@@ -87,7 +85,7 @@ kt = 1;                 % frame intervals
 
 % -------------------------    UPDATE ALL    -------------------------  %
 neuron.updateParams('gSig', gSig, ...       % -------- spatial -------- 
-    'gSiz', gSiz, ...
+    'gSiz', gSiz, ...AVG_z2_neuron
     'ring_radius', ring_radius, ...
     'ssub', ssub, ...
     'search_method', updateA_search_method, ...
@@ -181,7 +179,8 @@ S = interp1(x,S',xv)';
 upsampledTraces = true;
 end
 
-save(outpath)
+    save(outpath)
+
 
 
     

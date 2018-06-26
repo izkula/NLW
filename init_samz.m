@@ -20,16 +20,16 @@ trial_data = {...
 
 %for 8 arm
 frameSampleRate = 30.98;
-nFramesBaseline = round(5*frameSampleRate);
-nFramesAdvance = 9*frameSampleRate;
-nFramesStationary = 7*frameSampleRate;
-nFramesRetreat = 9*frameSampleRate;
-nFramesPostTrial = 5*frameSampleRate;
+% nFramesBaseline = round(5*frameSampleRate);
+% nFramesAdvance = round(9*frameSampleRate);
+% nFramesStationary = round(7*frameSampleRate);
+% nFramesRetreat = round(9*frameSampleRate);
+% nFramesPostTrial = round(5*frameSampleRate);
 
 
 %%make frame and time ticks for trial event changes
-frameTicks = [nFramesBaseline nFramesBaseline+nFramesAdvance ...
-    nFramesBaseline+nFramesAdvance+nFramesStationary ...
-    nFramesBaseline+nFramesAdvance+nFramesStationary+nFramesRetreat]
+%frameTicks = [nFramesBaseline nFramesBaseline+nFramesAdvance ...
+    %nFramesBaseline+nFramesAdvance+nFramesStationary ...
+    %nFramesBaseline+nFramesAdvance+nFramesStationary+nFramesRetreat]
 
-timeTicks = frameTicks / frameSampleRate;
+%timeTicks = frameTicks / frameSampleRate;

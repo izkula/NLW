@@ -56,22 +56,10 @@ tT = [t{8}];
 tB = [t{4}];
 
 %% Individual Neurons and Trials Separated
-for i = 1:size(tO,1)
-    h = figure; h.Units = 'inches'; h.Position = [1 1 7 10];
-    subplot(4,1,1)
-    shadedErrorBar([],mean(squeeze(tO(i,:,:))'),sem(squeeze(tO(i,:,:))'))
-    PlotVerticalLines(sIdx(:,2))
-    
-    
-    subplot(4,1,2)
-    shadedErrorBar([],mean(squeeze(tS(i,:,:))'),sem(squeeze(tS(i,:,:))'))
-    PlotVerticalLines(sIdx(:,2))
 
-    subplot(4,1,3)
-    shadedErrorBar([],mean(squeeze(tT(i,:,:))'),sem(squeeze(tT(i,:,:))'))
-        PlotVerticalLines(sIdx(:,2))
-
-    subplot(4,1,4)
+for i = 1:size(X{1},1)
+    for j = numel(X)
+        
     shadedErrorBar([],mean(squeeze(tB(i,:,:))'),sem(squeeze(tB(i,:,:))'))
         PlotVerticalLines(sIdx(:,2))
 
