@@ -32,7 +32,7 @@ run("Crop");
 
 
 //Reduce Images Size
-run("Size...", "width=200 height=166 depth=sliceCount constrain average interpolation=Bilinear");
+run("Size...", "width=300 height=166 depth=34836 constrain average interpolation=Bilinear");
 rename("z")
 
 //Generate Template Image
@@ -44,7 +44,7 @@ run("moco ", "value=30 downsample_value=1 template=AVG stack=z log=None plot=[No
 
 
 //Grouped Z Project you must make sure it is an even number stack
-run("Grouped Z Project...", "projection=[Average Intensity] group=2");
+run("Grouped Z Project...", "projection=[Sum Slices] group=4");
 
 //Save
 saveAs("Tiff", out_path);

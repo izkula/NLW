@@ -6,8 +6,8 @@ cd '/home/svesuna/2pdata/BpodData/'
 d = dir('**/*.mat')
 
 for i = 1:numel(d)
-    if regexp(d(i).name(1),'m') 
-
+    if regexp(d(i).name(1:4),'m830') 
+try
         d_split = split(d(i).name,'_')
         name.mouse = d_split{1};;
         name.exp = d_split{2};
@@ -54,5 +54,7 @@ for i = 1:numel(d)
        
        save(fullfile('/home/svesuna/Dropbox/2p_Habenula_Shared/',name.mouse, [name.mouse '_' name.exp '_' name.date '.mat']))
        
+end
     end
+    
 end

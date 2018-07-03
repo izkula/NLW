@@ -43,9 +43,9 @@ for i = 3:numel(f)
         load(fullfile(foldername, fnames{j}))
 
         C = fillmissing(C','linear')';
-        S = fillmissing(S,'linear');
+        %S = fillmissing(S,'linear');
         CC = [CC; C];
-        SS = [SS; S];
+       %  SS = [SS; S];
         AA{counter,j} = A;
         cellCounter(counter,j) = size(C,1);
       
@@ -53,7 +53,7 @@ for i = 3:numel(f)
 
     %split data into trials
     C_t = nan(size(CC,1),nFramesTrial , size(meta.frames,1)/2);
-    S_t = nan(size(SS,1),nFramesTrial, size(meta.frames,1)/2);
+    %S_t = nan(size(SS,1),nFramesTrial, size(meta.frames,1)/2);
     m_t = nan(1,nFramesTrial, size(meta.frames,1)/2);
     t_width = size(C_t,2)
     
@@ -62,7 +62,7 @@ for i = 3:numel(f)
          stimEndFrame =  meta.framesAligned(2*j) %define trial marker
      
          C_t(:,:,j) = CC(:,stimEndFrame - nFramesBeforeStimEnd : stimEndFrame + nFramesAfterStimEnd-1);
-         S_t(:,:,j) = SS(:,stimEndFrame - nFramesBeforeStimEnd : stimEndFrame + nFramesAfterStimEnd-1);
+         %S_t(:,:,j) = SS(:,stimEndFrame - nFramesBeforeStimEnd : stimEndFrame + nFramesAfterStimEnd-1);
          
          m_t(:,:,j) = meta.run(stimEndFrame - nFramesBeforeStimEnd : stimEndFrame + nFramesAfterStimEnd-1);
          
@@ -76,16 +76,15 @@ for i = 3:numel(f)
     CC_S{counter} = CC;
     CT_S{counter} = C_t
     CT = [CT;C_t];
-    ST = [ST; S_t];
+   % ST = [ST; S_t];
     MT = [MT; m_t];
     M{i} = meta; 
     
 end
 
-%AA = AA{3:end,:};
-cellCounter = cellCounter(3:end,:)
+cellCounter = cellCounter
 
-clearvars -except CT CT_S ST M  MT AA CC_S cellCounter nFramesBeforeStim nFramesStim nFramesStationary nFramesBeforeStationary nFramesBeforeStimEnd nFramesAfterStimEnd nFramesTrial
+clearvars -except CT CT_S  M  MT AA CC_S cellCounter nFramesBeforeStim nFramesStim nFramesStationary nFramesBeforeStationary nFramesBeforeStimEnd nFramesAfterStimEnd nFramesTrial
 stimTrials = repmat([ones(1,8) zeros(1,8)],1,4)
 objectTrials = repmat([1 0 1 0 0 1 0 0],1,8)
 socialTrials = repmat([0 1 0 0 1 0 1 0],1,8)

@@ -3,19 +3,19 @@ load('/home/svesuna/2presults/8arm2/allNeuronsTrial.mat')
 
 %%
 
-PKS = cell(numel(CT_S),1)
-PKS_Spikes = cell(numel(CT_S),1)
+%PKS = cell(numel(CT_S),1)
+%PKS_Spikes = cell(numel(CT_S),1)
 
-firstFrame = 1
-lastFrame = nFramesTrial
+firstFrame = 124 - 3*31
+lastFrame = nFramesTrial - 7*31
 counter = 1;
 for i = 1:numel(CT_S)
     for j = 1:size(CT_S{i},1)
         %extract calcium peak times
         for k = 1:size(CT_S{i},3)
-            PKS{i}(j,k) = length(findpeaks(CT_S{i}(j,firstFrame:lastFrame,k)));
+            %PKS{i}(j,k) = length(findpeaks(CT_S{i}(j,firstFrame:lastFrame,k)));
             
-            PKS_Spikes{i}(j,k) = sum(ST(counter,firstFrame:lastFrame,k));
+           % PKS_Spikes{i}(j,k) = sum(ST(counter,firstFrame:lastFrame,k));
             Ca_avg{i}(j,k) = mean(CT_S{i}(j,firstFrame:lastFrame,k),2)
         end
         counter = counter + 1
@@ -28,11 +28,11 @@ end
 %%
 %INDIVIDUAL NEURON PLOTTING FOR DIFFERENT TRIAL TYPES
 trialTypes = [];
-trialTypes = repmat([1 2 1 0 2 1 2 0],1,8)
+trialTypes = repmat([1 4 2 0 5 3 6 0],1,8)
 
  acc_base = [];
 
- j = 1
+ j = 5
  temp = [];
     temp = [Ca_avg{j}; trialTypes];
 
@@ -97,7 +97,7 @@ saveas(h1, [fig_dir '/Classifier'],'pdf')
 %% signifiance
 
 
-for j = [1 4 5 6 7]
+for j = [1 4 7]
     x = mean(accuracySVM{j}(1:10))
     
     y = sort(accuracySVM{j}(11:end));

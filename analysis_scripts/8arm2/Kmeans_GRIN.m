@@ -38,11 +38,7 @@ for i = 1:4
     [IDX, C, SUMD, D] = kmeans(mean(d{i},3), kClusters);
 
     d_m_sorted = [];
-     for j = 1:kClusters
-         d_m_sorted = [d_m_sorted;  d_m(find(IDX==j),:)];
-         d_all{i,j} = d_m(find(IDX==j),:);
-
-     end
+∑
      
   
      doPlotAll = 1

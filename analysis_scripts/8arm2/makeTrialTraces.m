@@ -23,11 +23,8 @@ f = dir('~/2pdata/20180522/')
 %number. 
 
 nFramesStationary = 212;
-nFramesStim = round(10*30.98);
-nFramesBeforeStationary = 3*31
-nFramesAfterStationaryEnd = 3*31;
-nFramesBeforeStimEnd =   nFramesStim - (nFramesStationary + nFramesBeforeStationary);
-nFramesAfterStimEnd = nFramesAfterStationaryEnd
+nFramesBeforeStationary = 4*31
+nFramesAfterStationaryEnd = 10*31;
 nFramesTrial = nFramesBeforeStationary + nFramesStationary + nFramesAfterStationaryEnd
 
 
@@ -38,15 +35,15 @@ for i = 3:numel(f)
     foldername = fullfile('~/2pdata/20180522/', f(i).name);
     if contains(foldername, '8arm2')       
         load(fullfile(foldername, 'metadata.mat')) %load metadata
-        CC = []; SS = [];
+        CC = [];
         for j = 1:3
             try
                 load(fullfile(foldername, fnames{j})) %load neurons data
 
                 C = fillmissing(C','linear')';
-                S = fillmissing(S,'linear');
+                %S = fillmissing(S,'linear');
                 CC = [CC; C];
-                SS = [SS; S];
+                %SS = [SS; S];
                 AA{counter,j} = A;
                 cellCounter(counter,j) = size(C,1);
             catch
@@ -56,18 +53,18 @@ for i = 3:numel(f)
 
         %split data into trials
         C_t = nan(size(CC,1),nFramesTrial , 64);
-        S_t = nan(size(SS,1),nFramesTrial, 64);
+        %S_t = nan(size(SS,1),nFramesTrial, 64);
         m_t = nan(1,nFramesTrial, 64);
         t_width = size(C_t,2)
 
         for j = 1:64  %for each trial      
             try
-             stimEndFrame =  meta.framesAligned(2*j) %define trial marker
+             stationaryEndFrame =  meta.framesAligned(2*j) %define trial marker
 
-             C_t(:,:,j) = CC(:,stimEndFrame - nFramesBeforeStimEnd : stimEndFrame + nFramesAfterStimEnd-1);
-             S_t(:,:,j) = SS(:,stimEndFrame - nFramesBeforeStimEnd : stimEndFrame + nFramesAfterStimEnd-1);
+             C_t(:,:,j) = CC(:,stationaryEndFrame - nFramesBeforeStationary - nFramesStationary :...
+                 stationaryEndFrame + nFramesAfterStationaryEnd-1);
 
-             m_t(:,:,j) = meta.run(stimEndFrame - nFramesBeforeStimEnd : stimEndFrame + nFramesAfterStimEnd-1);
+             m_t(:,:,j) = meta.run(stationaryEndFrame - nFramesBeforeStationary - nFramesStationary : stationaryEndFrame + nFramesAfterStationaryEnd-1);
 
             catch
                 fprintf('messed up' )
@@ -77,10 +74,10 @@ for i = 3:numel(f)
             end      
         end
         
-        SSS{counter} = SS;
+        %SSS{counter} = SS;
         CT_S{counter} = C_t
         CT = [CT;C_t];
-        ST = [ST; S_t];
+       % ST = [ST; S_t];
         MT = [MT; m_t];
         M{i} = meta; 
         counter = counter + 1;
@@ -88,7 +85,7 @@ for i = 3:numel(f)
 end
 
 
-clearvars -except CT CT_S ST M  MT AA  SSS cellCounter nFramesBeforeStim nFramesStim nFramesBeforeStimEnd nFramesAfterStimEnd nFramesTrial
+clearvars -except CT CT_S  M  MT AA   cellCounter nFramesBeforeStim nFramesStim nFramesBeforeStimEnd nFramesAfterStimEnd nFramesTrial
 fig_dir = '/home/svesuna/Dropbox/2p_Claustrum_Shared/2p/Results/8arm2/Figures/'
 
 objectTrials = repmat([1 0 1 0 0 1 0 0],1,8)

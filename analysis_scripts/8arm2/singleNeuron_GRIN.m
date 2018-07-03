@@ -1,4 +1,4 @@
-
+ 
 load('~/2presults/8arm2/allNeuronsTrial.mat')
 
 %Important for this experiment

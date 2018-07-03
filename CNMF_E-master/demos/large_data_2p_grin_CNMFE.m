@@ -4,20 +4,20 @@
 
 %% choose data 
 neuron = Sources2D(); %
-filename = '/m831/ImageNLWShapeLick/Jun24_2018/Session1/m831_ImageNLWShapeLick_Jun24_2018_Session1/'        % this demo data is very small, here we just use it as an example
+filename = '/m830/ImageNLWShapeLightReward/Jun30_2018/Session1/m830_ImageNLWShapeLightReward_Jun30_2018_Session1/'        % this demo data is very small, here we just use it as an example
 nam = fullfile('/home/svesuna/2pdata/BpodData', filename, 'z0_processed.tif')
 outpath = fullfile('/home/svesuna/2pdata/BpodData/', filename, 'neuron.mat')
 nam = neuron.select_data(nam);  %if nam is [], then select data interactively 
 
 %% parameters  
 % ------------------ SAM VESUNA PARAMETERS -------- %
-downSampleRate = 2; %This is the number used for grouped Z projection
+downSampleRate = 4; %This is the number used for grouped Z projection
 
 
 % -------------------------    COMPUTATION    -------------------------  %
 pars_envs = struct('memory_size_to_use', 80, ...   % GB, memory space you allow to use in MATLAB 
     'memory_size_per_patch', 80, ...   % GB, space for loading data within one patch 
-    'patch_dims', [80, 60]);  %GB, patch size 
+    'patch_dims', [50, 40]);  %GB, patch size 
 % -------------------------      SPATIAL      -------------------------  %
 gSig = 1;           % pixel, gaussian width of a gaussian kernel for filtering the data. 0 means no filtering
 gSiz = 3;          % pixel, neuron diameter 
@@ -50,7 +50,7 @@ nk = 1;             % detrending the slow fluctuation. usually 1 is fine (no det
 detrend_method = 'local_min';  % compute the local minimum as an estimation of trend. 
 
 % -------------------------     BACKGROUND    -------------------------  %
-bg_model = 'svd';  % model of the background {'ring', 'svd'(default), 'nmf'}
+bg_model = 'nmf';  % model of the background {'ring', 'svd'(default), 'nmf'}
 nb = 1;             % number of background sources for each patch (only be used in SVD and NMF model)
 ring_radius = 13;  % when the ring model used, it is the radius of the ring used in the background model. 
                     %otherwise, it's just the width of the overlapping area 
@@ -64,15 +64,15 @@ dmin_only = 5;  % merge neurons if their distances are smaller than dmin_only.
 
 % -------------------------  INITIALIZATION   -------------------------  %
 K = [];             % maximum number of neurons per patch. when K=[], take as many as possible 
-min_corr = 0.1;     % minimum local correlation for a seeding pixel
+min_corr = 0.07;     % minimum local correlation for a seeding pixel
 min_pnr = 1;       % minimum peak-to-noise ratio for a seeding pixel
 min_pixel = 2^2;      % minimum number of nonzero pixels for each neuron
-bd = 3;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
+bd = 20;             % number of rows/columns to be ignored in the boundary (mainly for motion corrected data)
 frame_range = [];   % when [], uses all frames 
 save_initialization = false;    % save the initialization procedure, filename] as a video. 
 use_parallel = true;    % use parallel computation for parallel computing 
 show_init = false   % show initialization results 
-choose_params = true; % manually choose parameters 
+choose_params = false; % manually choose parameters 
 center_psf = true;  % set the value as true when the background fluctuation is large (usually 1p data) 
                     % set the value as false when the background fluctuation is small (2p)
 

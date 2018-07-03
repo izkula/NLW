@@ -164,7 +164,7 @@ set(gca, 'FontSize',5)
 saveas(h2, [fig_dir 'ExplainedCA'],'pdf')
 
 
-%% PCA each mouse
+%% PCA each mouse AND EUCLIDEAN DISTANCE %%%
 
 cellNumbers = [1 cumsum(sum(cellCounter')) length(cellCounter)]
 
@@ -256,7 +256,7 @@ end
 
 end
 
-%%    
+%%    EUCLIDEAN DISTANCE
   % plotting
  h4 = figure; h4.Units = 'inches'; h4.Position = [1 1 4.5 1.25]
 

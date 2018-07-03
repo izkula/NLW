@@ -29,17 +29,11 @@ if doprocessGRINStackinImageJ
     grin_2p_CropReduceRegisterMoco(basePath,'BpodData')
 end
 
-%% MAKE AVERAGE PROCESSED VIDEOS
-
-
-%% Then run CNMFE
+%%RUN CNMFE 
 
 %% Organize meta data and extract movement data
 
-processMetaData;
-
-
-grin_2p_8arm_OrganizeMetaData;
+%processMetaData_habenula
 
 %grin_2p_running_OrganizeMetaData;
 
